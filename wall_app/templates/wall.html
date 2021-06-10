@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>CodingDojo Wall</title>
+</head>
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h1>CodingDojo Wall</h1>
+            <p> Welcome, {{request.session.fname}}!</p>
+            <a href="/destroy">Log Off</a>
+        </div>
+
+        <div class="post_message">
+            <form action="/message" method="POST">
+                {% csrf_token %}
+                    {% csrf_token %}
+                <textarea type="text" class="message_box" name="msg" placeholder="Post a message..."></textarea>
+                <input type="submit" value="Post It">
+            </form>
+        </div>
+        <div class="log">
+            {% for msg in comments%}
+                <div class="user_messages">
+                    {{msg.user.first_name}} {{msg.user.last_name}} {{msg.updated_at}}
+                    <p>{{msg.message_text}}</p>
+                    <div class="user_comments">
+                        {% for comment in msg.comments.all %} {# This grabs all of the comments for this specific comment #}
+                            {{comment.user.first_name}} {{comment.user.last_name}} {{comment.updated_at}}
+                            <p>{{comment.comment_text}}</p>
+                        {% endfor %}
+                    </div>
+                    <form action="/comment/{{msg.id}}"  method="POST">
+
+                        {% csrf_token %}
+                        <textarea  name="cmnt" placeholder="Leave {{msg.user.first_name}} a comment..."></textarea>
+                        <input type="submit" value="Comment"> 
+                    
+                    </form>
+                </div>  
+            {% endfor %}
+        </div>
+    </div>
+    
+</body>
+</html>
